@@ -123,6 +123,9 @@ describe 'reslove_rule'
     RET=$(resolve_rule 'v1.2.3')
     assert "$RET" "eq 1.2.3"                                "Specific (v1.2.3)"
 
+    RET=$(resolve_rule '=1.2.3')
+    assert "$RET" "eq 1.2.3"                                "Specific (=1.2.3)"
+
     RET=$(resolve_rule '1')
     assert "$RET" "eq 1"                                    "Specific (1)"
 
@@ -171,6 +174,15 @@ describe 'reslove_rule'
     RET=$(resolve_rule '1.*.*')
     assert "$RET" "eq 1"                                    "Wildcard (1.*.*)"
 
+    RET=$(resolve_rule '=1.2.x')
+    assert "$RET" "eq 1.2"                                  "Wildcard (=1.2.x)"
+
+    RET=$(resolve_rule '=1.2.*')
+    assert "$RET" "eq 1.2"                                  "Wildcard (=1.2.*)"
+
+    RET=$(resolve_rule '=1.*.*')
+    assert "$RET" "eq 1"                                    "Wildcard (=1.*.*)"
+
     RET=$(resolve_rule '*.*.*')
     assert "$RET" "all"                                     "Wildcard (*.*.*)"
 
@@ -178,8 +190,8 @@ describe 'reslove_rule'
     assert "$RET" "caret 1.2.3"                             "Caret (^1.2.3)"
 
 describe 'normalize_rules'
-    RET="$(normalize_rules '  \t  >	\t1.2.3.4-abc.def+a   \t	123.123   -\t\t\t  v5.3.2  ~ \tv5.5.x  ')"
-    assert "$RET" '>1.2.3.4-abc.def+a 123.123_-_5.3.2 ~5.5.*'
+    RET="$(normalize_rules '  \t  >	\t1.2.3.4-abc.def+a   \t	123.123   -\t\t\t  v5.3.2  ~ \tv5.5.* x ')"
+    assert "$RET" '>1.2.3.4-abc.def+a 123.123_-_5.3.2 ~5.5 *'
 
 describe 'read_rule'
     read_rule '~1.2.3 4.5.6_-_7.8.9 *' rule

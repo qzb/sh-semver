@@ -240,6 +240,7 @@ regex_match()
 #
 # * replaces chains of whitespaces with single spaces
 # * replaces whitespaces around hyphen operator with "_"
+# * removes wildcards from version numbers (1.2.* -> 1.2)
 # * replaces "x" with "*"
 # * removes whitespace between operators and version numbers
 # * removes leading "v" from version numbers
@@ -253,6 +254,7 @@ normalize_rules()
         | sed 's/ - /_-_/g' \
         | sed 's/\([~^<>=]\) /\1/g' \
         | sed 's/\([ _~^<>=]\)v/\1/g' \
+        | sed 's/\.[x*]//gi' \
         | sed 's/x/*/gi' \
         | sed 's/^ //g' \
         | sed 's/ $//g'
@@ -292,8 +294,6 @@ resolve_rule()
     while read_rule "$rules" rule; do
         case "$rule" in
             '*')     echo all;;
-            '*.*')   echo all;;
-            '*.*.*') echo all;;
             '#')     echo eq $RULEVER_1;;
             '=#')    echo eq $RULEVER_1;;
             '<#')    echo lt $RULEVER_1;;
@@ -304,8 +304,6 @@ resolve_rule()
                      echo le $RULEVER_2;;
             '~#')    echo tilde $RULEVER_1;;
             '^#')    echo caret $RULEVER_1;;
-            '#.*')   echo eq $RULEVER_1;;
-            '#.*.*') echo eq $RULEVER_1;;
             *)       return 1
         esac
     done

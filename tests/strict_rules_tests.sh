@@ -36,6 +36,11 @@ done <<EOF
 <1.0.0-a.b      1.0.0-a.b   false
 <1.0.0-a.b      1.0.0-a.b.0  false
 <1.0.0-a.b      1.0.0       false
+<1.2.x          1.2.0       false
+<1.2.x          1.1.9       true
+<1.x.x          1.0.0       false
+<1.x.x          0.9.9       true
+
 
 
 # Less than or equal
@@ -52,6 +57,10 @@ done <<EOF
 <=1.0.0-a.b     1.0.0-a.b   true
 <=1.0.0-a.b     1.0.0-a.b.0  false
 <=1.0.0-a.b     1.0.0       false
+<=1.2.x         1.3.0       false
+<=1.2.x         1.2.7       true
+<=1.x.x         2.0.0       false
+<=1.x.x         1.9.9       true
 
 
 # Greater than
@@ -69,6 +78,10 @@ done <<EOF
 >1.0.0-a.b     1.0.0       true
 >1.0.0-a.b     2.5.0-4     false
 >1.0.0-a.b     2.5.0       true
+>1.2.x         1.3.0       true
+>1.2.x         1.2.9       false
+>1.x.x         2.0.0       true
+>1.x.x         1.9.9       false
 
 
 # Greater than or equal
@@ -86,6 +99,10 @@ done <<EOF
 >=1.0.0-a.b    1.0.0       true
 >=1.0.0-a.b    2.5.0-4     false
 >=1.0.0-a.b    2.5.0       true
+>=1.2.x         1.2.0       true
+>=1.2.x         1.1.9       false
+>=1.x.x         1.0.0       true
+>=1.x.x         0.9.9       false
 
 
 # Specific version
