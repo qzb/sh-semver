@@ -106,6 +106,22 @@ describe 'semver_ge'
     semver_ge 1.2.4 1.2.3
     assert $? 0
 
+describe 'semver_sort'
+    RET=$(semver_sort)
+    assert "$RET" "" "should return nothing when no arguments passed"
+
+    RET=$(semver_sort 1.2.3)
+    assert "$RET" "1.2.3" "should sort input - 1.2.3"
+
+    RET=$(semver_sort 1.2.3 4.5.6 7.8.9)
+    assert "$RET" "1.2.3 4.5.6 7.8.9" "should sort input - 1.2.3 4.5.6 7.8.9"
+
+    RET=$(semver_sort 7.8.9 4.5.6 1.2.3)
+    assert "$RET" "1.2.3 4.5.6 7.8.9" "should sort input - 1.2.3 4.5.6 7.8.9"
+
+    RET=$(semver_sort 1 2 8 5 2 4 9 5 2 6 4 1 2 0 4 2 5 8 7 4 3)
+    assert "$RET" "0 1 1 2 2 2 2 2 3 4 4 4 4 5 5 5 6 7 8 8 9" "should sort input - long input"
+
 describe 'regex_match'
     regex_match "1.22.333 - 1.2.3-3.2.1-a.b.c-def+011.a.1" "$RE_VER - $RE_VER"
     assert $? 0                                             "Exit code should be 0 when match"

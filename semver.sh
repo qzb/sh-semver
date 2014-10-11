@@ -201,6 +201,30 @@ semver_ge()
     semver_lt "$1" "$2" && return 1 || return 0
 }
 
+semver_sort()
+{
+    if [ $# -le 1 ]; then
+        echo $1
+        return
+    fi
+
+    local pivot=$1
+    local args_a=""
+    local args_b=""
+
+    shift 1
+
+    for ver in $@; do
+        if semver_le $ver $pivot; then
+            args_a="$args_a $ver"
+        else
+            args_b="$ver $args_b"
+        fi
+    done
+
+    echo $(semver_sort $args_a) $pivot $(semver_sort $args_b)
+}
+
 regex_match()
 {
     local string="$1 "
@@ -289,7 +313,11 @@ resolve_rule()
     RULEIND=0
 
     local rules="$(normalize_rules "$1")"
-    local output=""
+
+    if [ -z "$rules" ]; then
+        echo all
+        return
+    fi
 
     while read_rule "$rules" rule; do
         case "$rule" in
@@ -407,27 +435,36 @@ done
 
 shift $(( $OPTIND-1 ))
 
-while [ -n "$rules_string" ]; do
-    head="${rules_string%%||*}"
+# Sort versions
+versions=$(semver_sort $@)
 
-    if [ "$head" = "$rules_string" ]; then
-        rules_string=""
-    else
-        rules_string="${rules_string#*||}"
-    fi
+output=""
 
-    if [ -z "$head" ] || [ -n "$(echo "$head" | grep -E -x '[ \t]*')" ]; then
-        group=$(( $group + 1 ))
-        continue
-    fi
+# Loop over sets of rules (sets of rules are separated with ||)
+for ver in $versions; do
+    rules_tail="$rules_string";
 
-    rules="$(resolve_rule "$head")"
+    while [ -n "$rules_tail" ]; do
+        head="${rules_tail%%||*}"
 
-    if [ $? -eq 1 ]; then
-        exit
-    fi
+        if [ "$head" = "$rules_tail" ]; then
+            rules_string=""
+        else
+            rules_tail="${rules_tail#*||}"
+        fi
 
-    for ver in $@; do
+        #if [ -z "$head" ] || [ -n "$(echo "$head" | grep -E -x '[ \t]*')" ]; then
+            #group=$(( $group + 1 ))
+            #continue
+        #fi
+
+        rules="$(resolve_rule "$head")"
+
+        # If specified rule cannot be recognised - end with error
+        if [ $? -eq 1 ]; then
+            exit 1
+        fi
+
         if [ -z `echo "$ver" | grep -E -x "[v=]?[ \t]*$RE_VER"` ]; then
             continue
         fi
@@ -453,9 +490,8 @@ EOF
 
         if $success; then
             if [ -z "$(get_prerelease $ver)" ] || $allow_prerel; then
-                if [ -z "$max" ] || semver_lt "$max" "$ver"; then
-                    max="$ver"
-                fi
+                output="$output$ver\n"
+                break;
             fi
         fi
     done
@@ -463,6 +499,6 @@ EOF
     group=$(( $group + 1 ))
 done
 
-if [ -n "$max" ]; then
-    echo $max
+if [ -n "$output" ]; then
+    printf $output
 fi
