@@ -1,5 +1,5 @@
 # sh-semver
-[![Build Status](https://travis-ci.org/jsokolowski/sh-semver.svg?branch=master)](https://travis-ci.org/jsokolowski/sh-semver)
+[![Build Status](https://travis-ci.org/qzb/sh-semver.svg?branch=master)](https://travis-ci.org/qzb/sh-semver)
 
 The semantic versioner for Bourne Shell.
 
