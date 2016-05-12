@@ -291,7 +291,7 @@ normalize_rules()
 # Reads rule from provided string
 read_rule()
 {
-    RULEIND=$(( $RULEIND + 1 ))
+    RULEIND=$(( RULEIND + 1 ))
 
     local _rule _idnt _vers
     _rule="$( echo "$1 " | cut -d ' ' -f $RULEIND  )"
@@ -306,7 +306,7 @@ read_rule()
     local _i=1;
     for ver in $_vers; do
         eval "RULEVER_$_i='$ver'"
-        _i=$(( $_i + 1 ))
+        _i=$(( _i + 1 ))
     done
 
     # set global variable
@@ -443,7 +443,7 @@ while getopts ar:h o; do
     esac
 done
 
-shift $(( $OPTIND-1 ))
+shift $(( OPTIND-1 ))
 
 # Sort versions
 versions="$(semver_sort $@)"
@@ -510,7 +510,7 @@ EOF
         fi
     done
 
-    group=$(( $group + 1 ))
+    group=$(( group + 1 ))
 done
 
 if [ -n "$output" ]; then
