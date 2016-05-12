@@ -181,6 +181,12 @@ describe 'reslove_rule'
     RET=$(resolve_rule '*')
     assert "$RET" "all"                                     "Wildcard (*)"
 
+    RET=$(resolve_rule 'x')
+    assert "$RET" "all"                                     "Wildcard (x)"
+
+    RET=$(resolve_rule 'X')
+    assert "$RET" "all"                                     "Wildcard (X)"
+
     RET=$(resolve_rule '1.2.x')
     assert "$RET" "eq 1.2"                                  "Wildcard (1.2.x)"
 
@@ -192,6 +198,9 @@ describe 'reslove_rule'
 
     RET=$(resolve_rule '=1.2.x')
     assert "$RET" "eq 1.2"                                  "Wildcard (=1.2.x)"
+
+    RET=$(resolve_rule '=1.2.X')
+    assert "$RET" "eq 1.2"                                  "Wildcard (=1.2.X)"
 
     RET=$(resolve_rule '=1.2.*')
     assert "$RET" "eq 1.2"                                  "Wildcard (=1.2.*)"
