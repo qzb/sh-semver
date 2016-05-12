@@ -514,5 +514,5 @@ EOF
 done
 
 if [ -n "$output" ]; then
-    printf "$output"
+    echo "$output"
 fi
