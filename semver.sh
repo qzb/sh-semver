@@ -322,12 +322,7 @@ resolve_rule()
     local rules
     rules="$(normalize_rules "$1")"
 
-    if [ -z "$rules" ]; then
-        echo all
-        return
-    fi
-
-    while read_rule "$rules" rule; do
+    while read_rule "${rules:-all}" rule; do
         case "$rule" in
             '*')     echo "all";;
             '#')     echo "eq $RULEVER_1";;
