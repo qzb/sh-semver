@@ -446,7 +446,7 @@ done
 shift $(( OPTIND-1 ))
 
 # Sort versions
-versions="$(semver_sort $@)"
+versions="$(semver_sort "$@")"
 
 output=""
 
