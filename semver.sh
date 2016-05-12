@@ -242,7 +242,7 @@ regex_match()
     fi
 
     local match_len=$(echo "$match" | wc -c)
-    REST=`echo "$string" | cut -c "$match_len"-`
+    REST=$(echo "$string" | cut -c "$match_len"-)
 
     local part
     local i=1
@@ -299,7 +299,7 @@ read_rule()
     fi
 
     local _i=1;
-    for ver in `echo "$_vers"`; do
+    for ver in $(echo "$_vers"); do
         eval "RULEVER_$_i='$ver'"
         _i=$(( $_i + 1 ))
     done
@@ -467,11 +467,11 @@ for ver in $versions; do
             exit 1
         fi
 
-        if [ -z `echo "$ver" | grep -E -x "[v=]?[ \t]*$RE_VER"` ]; then
+        if [ -z $(echo "$ver" | grep -E -x "[v=]?[ \t]*$RE_VER") ]; then
             continue
         fi
 
-        ver=`echo "$ver" | grep -E -x "$RE_VER"`
+        ver=$(echo "$ver" | grep -E -x "$RE_VER")
 
         success=true
         allow_prerel=false
