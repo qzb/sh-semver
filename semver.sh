@@ -244,9 +244,8 @@ regex_match()
         return 1
     fi
 
-    local match_len
-    match_len=$(echo "$match" | wc -c)
-    REST=$(echo "$string" | cut -c "$match_len"-)
+    local match_len=${#match}
+    REST="${string:$match_len}"
 
     local part
     local i=1
