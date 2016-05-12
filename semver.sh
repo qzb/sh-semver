@@ -211,20 +211,22 @@ semver_sort()
     fi
 
     local pivot=$1
-    local args_a=""
-    local args_b=""
+    local args_a=()
+    local args_b=()
 
     shift 1
 
     for ver in "$@"; do
         if semver_le "$ver" "$pivot"; then
-            args_a="$args_a $ver"
+            args_a=( "${args_a[@]}" "$ver" )
         else
-            args_b="$ver $args_b"
+            args_b=( "$ver" "${args_b[@]}" )
         fi
     done
 
-    echo $(semver_sort $args_a) $pivot $(semver_sort $args_b)
+    args_a=( $(semver_sort "${args_a[@]}") )
+    args_b=( $(semver_sort "${args_b[@]}") )
+    echo "${args_a[@]}" "$pivot" "${args_b[@]}"
 }
 
 regex_match()
