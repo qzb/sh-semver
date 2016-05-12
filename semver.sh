@@ -475,7 +475,7 @@ for ver in $versions; do
             exit 1
         fi
 
-        if [ -z $(echo "$ver" | grep -E -x "[v=]?[ \t]*$RE_VER") ]; then
+        if ! echo "$ver" | grep -q -E -x "[v=]?[ \t]*$RE_VER"; then
             continue
         fi
 
