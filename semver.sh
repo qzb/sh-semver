@@ -175,7 +175,7 @@ semver_lt()
             return 1
         # Finally if of identifiers is a number compare them lexically
         else
-            [ "$head_a" '<' "$head_b" ] && return 0 || return 1
+            test "$head_a" \< "$head_b" && return 0 || return 1
         fi
     done
 
