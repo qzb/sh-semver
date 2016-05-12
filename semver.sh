@@ -488,11 +488,14 @@ for ver in $versions; do
         fi
 
         while read -r rule; do
-            if [ -n "$(get_prerelease "${rule#* }")" ] && semver_eq "$(get_number "${rule#* }")" "$(get_number "$ver")" || [ "$rule" = "all" ]; then
+            comparator="${rule%% *}"
+            operand="${rule#* }"
+
+            if [ -n "$(get_prerelease "$operand")" ] && semver_eq "$(get_number "$operand")" "$(get_number "$ver")" || [ "$rule" = "all" ]; then
                 allow_prerel=true
             fi
 
-            rule_$rule "$ver"
+            "rule_$comparator" "$operand" "$ver"
             if [ $? -eq 1 ]; then
                 success=false
                 break
