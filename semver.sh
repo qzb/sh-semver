@@ -249,7 +249,7 @@ regex_match()
 
     local part
     local i=1
-    for part in $(echo "$string"); do
+    for part in $string; do
         local ver num
         ver="$(eval "echo '$part' | grep -E -o '$RE_VER'   | head -n 1 | sed 's/ \t//g'")";
         num=$(get_number "$ver")
@@ -304,7 +304,7 @@ read_rule()
     fi
 
     local _i=1;
-    for ver in $(echo "$_vers"); do
+    for ver in $_vers; do
         eval "RULEVER_$_i='$ver'"
         _i=$(( $_i + 1 ))
     done
