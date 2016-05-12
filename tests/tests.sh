@@ -135,107 +135,91 @@ describe 'regex_match'
     assert "$MATCHED_VER_1" ""                              "When don't match MATCHED_VER_x should be empty"
     assert "$MATCHED_VER_1" ""                              "When don't match MATCHED_NUM_x should be empty"
 
-describe 'reslove_rule'
-    RET=$(resolve_rule 'v1.2.3')
+describe 'resolve_rules'
+    RET=$(resolve_rules 'v1.2.3')
     assert "$RET" "eq 1.2.3"                                "Specific (v1.2.3)"
 
-    RET=$(resolve_rule '=1.2.3')
+    RET=$(resolve_rules '=1.2.3')
     assert "$RET" "eq 1.2.3"                                "Specific (=1.2.3)"
 
-    RET=$(resolve_rule '1')
+    RET=$(resolve_rules '1')
     assert "$RET" "eq 1"                                    "Specific (1)"
 
-    RET=$(resolve_rule '=1.2.3-a.2-c')
+    RET=$(resolve_rules '=1.2.3-a.2-c')
     assert "$RET" "eq 1.2.3-a.2-c"                          "Specific (=1.2.3-a.2-c)"
 
-    RET=$(resolve_rule '>1.2.3')
+    RET=$(resolve_rules '>1.2.3')
     assert "$RET" "gt 1.2.3"                                "Greater than (>1.2.3)"
 
-    RET=$(resolve_rule '<1.2.3')
+    RET=$(resolve_rules '<1.2.3')
     assert "$RET" "lt 1.2.3"                                "Less than (<1.2.3)"
 
-    RET=$(resolve_rule '>=1.2.3')
+    RET=$(resolve_rules '>=1.2.3')
     assert "$RET" "ge 1.2.3"                                "Greater than or equal to (>=1.2.3)"
 
-    RET=$(resolve_rule '<=1.2.3')
+    RET=$(resolve_rules '<=1.2.3')
     assert "$RET" "le 1.2.3"                                "Less than or equal to (<=1.2.3)"
 
-    RET=$(resolve_rule '1.2.3 - 4.5.6')
+    RET=$(resolve_rules '1.2.3 - 4.5.6')
     assert "$RET" "ge 1.2.3\nle 4.5.6"                      "Range (1.2.3 - 4.5.6)"
 
-    RET=$(resolve_rule '>1.2.3 <4.5.6')
+    RET=$(resolve_rules '>1.2.3 <4.5.6')
     assert "$RET" "gt 1.2.3\nlt 4.5.6"                      "Range (>1.2.3 <4.5.6)"
 
-    RET=$(resolve_rule '>1.2.3 <=4.5.6')
+    RET=$(resolve_rules '>1.2.3 <=4.5.6')
     assert "$RET" "gt 1.2.3\nle 4.5.6"                      "Range (>1.2.3 <=4.5.6)"
 
-    RET=$(resolve_rule '>=1.2.3 <4.5.6')
+    RET=$(resolve_rules '>=1.2.3 <4.5.6')
     assert "$RET" "ge 1.2.3\nlt 4.5.6"                      "Range (>=1.2.3 <4.5.6)"
 
-    RET=$(resolve_rule '>=1.2.3 <=4.5.6')
+    RET=$(resolve_rules '>=1.2.3 <=4.5.6')
     assert "$RET" "ge 1.2.3\nle 4.5.6"                      "Range (>=1.2.3 <=4.5.6)"
 
-    RET=$(resolve_rule '~1.2.3')
+    RET=$(resolve_rules '~1.2.3')
     assert "$RET" "tilde 1.2.3"                             "Tilde (~1.2.3)"
 
-    RET=$(resolve_rule '*')
+    RET=$(resolve_rules '*')
     assert "$RET" "all"                                     "Wildcard (*)"
 
-    RET=$(resolve_rule 'x')
+    RET=$(resolve_rules 'x')
     assert "$RET" "all"                                     "Wildcard (x)"
 
-    RET=$(resolve_rule 'X')
+    RET=$(resolve_rules 'X')
     assert "$RET" "all"                                     "Wildcard (X)"
 
-    RET=$(resolve_rule '1.2.x')
+    RET=$(resolve_rules '1.2.x')
     assert "$RET" "eq 1.2"                                  "Wildcard (1.2.x)"
 
-    RET=$(resolve_rule '1.2.*')
+    RET=$(resolve_rules '1.2.*')
     assert "$RET" "eq 1.2"                                  "Wildcard (1.2.*)"
 
-    RET=$(resolve_rule '1.*.*')
+    RET=$(resolve_rules '1.*.*')
     assert "$RET" "eq 1"                                    "Wildcard (1.*.*)"
 
-    RET=$(resolve_rule '=1.2.x')
+    RET=$(resolve_rules '=1.2.x')
     assert "$RET" "eq 1.2"                                  "Wildcard (=1.2.x)"
 
-    RET=$(resolve_rule '=1.2.X')
+    RET=$(resolve_rules '=1.2.X')
     assert "$RET" "eq 1.2"                                  "Wildcard (=1.2.X)"
 
-    RET=$(resolve_rule '=1.2.*')
+    RET=$(resolve_rules '=1.2.*')
     assert "$RET" "eq 1.2"                                  "Wildcard (=1.2.*)"
 
-    RET=$(resolve_rule '=1.*.*')
+    RET=$(resolve_rules '=1.*.*')
     assert "$RET" "eq 1"                                    "Wildcard (=1.*.*)"
 
-    RET=$(resolve_rule '*.*.*')
+    RET=$(resolve_rules '*.*.*')
     assert "$RET" "all"                                     "Wildcard (*.*.*)"
 
-    RET=$(resolve_rule '^1.2.3')
+    RET=$(resolve_rules '^1.2.3')
     assert "$RET" "caret 1.2.3"                             "Caret (^1.2.3)"
+
+    RET=$(resolve_rules '~1.2.3 4.5.6_-_7.8.9 *')
+    assert "$RET" "tilde 1.2.3
+ge 4.5.6
+le 7.8.9
+all"                                                        "Tilde (~1.2.3) and Range (4.5.6 - 7.8.9) and Wildcard (*)"
 
 describe 'normalize_rules'
     RET="$(normalize_rules '  \t  >	\t1.2.3.4-abc.def+a   \t	123.123   -\t\t\t  v5.3.2  ~ \tv5.5.* x ')"
     assert "$RET" '>1.2.3.4-abc.def+a 123.123_-_5.3.2 ~5.5 *'
-
-describe 'read_rule'
-    read_rule '~1.2.3 4.5.6_-_7.8.9 *' rule
-    assert $? 0                                             'Read 1st rule - should return true'
-    assert $RULEIND 1                                       'Read 1st rule - $RULEIND should be 1'
-    assert "$rule" "~#"                                     'Read 1st rule - $rule should be "~#"'
-    assert "$RULEVER_1" "1.2.3"                             'Read 1st rule - $RULEVER_1 should be "1.2.3"'
-
-    read_rule '~1.2.3 4.5.6_-_7.8.9 *' rule
-    assert $? 0                                             'Read 2nd rule - should return true'
-    assert $RULEIND 2                                       'Read 2nd rule - $RULEIND should be 2'
-    assert "$rule" "#_-_#"                                  'Read 2nd rule - $rule should be "#_-_#"'
-    assert "$RULEVER_1" "4.5.6"                             'Read 2nd rule - $RULEVER_1 should be "4.5.6"'
-    assert "$RULEVER_2" "7.8.9"                             'Read 2nd rule - $RULEVER_1 should be "7.8.9"'
-
-    read_rule '~1.2.3 4.5.6_-_7.8.9 *' rule
-    assert $? 0                                             'Read 3rd rule - should return true'
-    assert $RULEIND 3                                       'Read 3rd rule - $RULEIND should be 3'
-    assert "$rule" "*"                                      'Read 3rd rule - $rule should be "*"'
-
-    read_rule '~1.2.3 4.5.6_-_7.8.9 *' rule
-    assert $? 1                                             'Read 4th rule - should return false'
