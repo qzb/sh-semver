@@ -11,7 +11,7 @@ RE_VER="[ \t]*$RE_NUM(-$RE_LAB)?(\+$RE_MET)?"
 
 BRE_DIGIT='[0-9]\{1,\}'
 BRE_ALPHA='[0-9a-zA-Z-]\{1,\}'
-BRE_NUM="$BRE_DIGIT\(\.$BRE_DIGIT\)*"
+BRE_NUM="$BRE_DIGIT\(\.$BRE_DIGIT\)\{0,2\}"
 BRE_PRE="$BRE_ALPHA\(\.$BRE_ALPHA\)*"
 BRE_MET="$BRE_ALPHA"
 BRE_VER="$BRE_NUM\(-$BRE_PRE\)\{0,1\}\(+$BRE_MET\)\{0,1\}"
