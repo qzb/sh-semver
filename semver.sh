@@ -9,9 +9,11 @@ RE_LAB="$_lab_part(\.$_lab_part)*"
 RE_MET="$_met_part(\.$_met_part)*"
 RE_VER="[ \t]*$RE_NUM(-$RE_LAB)?(\+$RE_MET)?"
 
-BRE_NUM='[0-9]\{1,\}\(\.[0-9]\{1,\}\)*'
-BRE_PRE='[0-9a-zA-Z-]\{1,\}\(\.[0-9a-zA-Z-]\{1,\}\)*'
-BRE_MET='[0-9A-Za-z-]\{1,\}'
+BRE_DIGIT='[0-9]\{1,\}'
+BRE_ALPHA='[0-9a-zA-Z-]\{1,\}'
+BRE_NUM="$BRE_DIGIT\(\.$BRE_DIGIT\)*"
+BRE_PRE="$BRE_ALPHA\(\.$BRE_ALPHA\)*"
+BRE_MET="$BRE_ALPHA"
 BRE_VER="$BRE_NUM\(-$BRE_PRE\)\{0,1\}\(+$BRE_MET\)\{0,1\}"
 
 filter()
