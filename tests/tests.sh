@@ -148,6 +148,12 @@ describe 'resolve_rules'
     RET=$(resolve_rules '=1.2.3-a.2-c')
     assert "$RET" "eq 1.2.3-a.2-c"                          "Specific (=1.2.3-a.2-c)"
 
+    RET=$(resolve_rules '=1.2.3-a.2+meta')
+    assert "$RET" "eq 1.2.3-a.2+meta"                       "Specific (=1.2.3-a.2+meta)"
+
+    RET=$(resolve_rules '=1.2.3-a.2+meta.data')
+    assert "$RET" "eq 1.2.3-a.2+meta.data"                  "Specific (=1.2.3-a.2+meta.data)"
+
     RET=$(resolve_rules '>1.2.3')
     assert "$RET" "gt 1.2.3"                                "Greater than (>1.2.3)"
 
