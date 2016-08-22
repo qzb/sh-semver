@@ -60,11 +60,9 @@ summary()
 # Import specs
 . ./tests/tests.sh
 . ./tests/strict_rules_tests.sh
+. ./tests/output.sh
 #. ./tests/node_semver_tests.sh
 
 
 # Summarize
 summary
-
-
-
