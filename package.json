@@ -1,10 +1,16 @@
 {
   "name": "sh-semver",
   "version": "1.0.0",
-  "description": "The semantic versioner for Bourne Shell.",
+  "description": "The semantic versioner for bash",
   "homepage": "https://github.com/qzb/sh-semver#readme",
-  "author": "Józef Sokołowski (http://qzb.me/)",
+  "author": {
+    "name": "Józef Sokołowski",
+    "url": "http://qzb.me"
+  },
   "license": "MIT",
+  "bin": {
+    "sh-semver": "./semver.sh"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/qzb/sh-semver.git"
@@ -12,7 +18,9 @@
   "bugs": {
     "url": "https://github.com/qzb/sh-semver/issues"
   },
-  "files": [ "semver.sh" ],
+  "files": [
+    "semver.sh"
+  ],
   "directories": {
     "test": "tests"
   },

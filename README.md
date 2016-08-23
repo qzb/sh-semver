@@ -1,5 +1,7 @@
 # sh-semver
-[![Build Status](https://travis-ci.org/qzb/sh-semver.svg?branch=master)](https://travis-ci.org/qzb/sh-semver)
+
+[![NPM Version][npm-image]][npm-url]
+[![Build][travis-image]][travis-url]
 
 The semantic versioner for Bourne Shell.
 
@@ -51,3 +53,9 @@ Hyphen range ``A.B.C - X.Y.Z`` equivalent of ``>=A.B.C <=X.Y.Z``.
 
 ### Prerelease versions
 Prerelease versions can satisfy comparators set only when have the same minor major and patch numbers as at least one of comparators.
+
+
+[npm-image]: https://img.shields.io/npm/v/sh-semver.svg
+[npm-url]: https://npmjs.org/package/sh-semver.sh
+[travis-image]: https://img.shields.io/travis/qzb/sh-semver/master.svg
+[travis-url]: https://travis-ci.org/qzb/sh-semver
