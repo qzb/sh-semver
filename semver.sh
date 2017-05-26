@@ -419,72 +419,72 @@ rule_all()
 
 apply_rules()
 {
-  local rules_string="$1"
-  shift
-  local versions=( "$@" )
+    local rules_string="$1"
+    shift
+    local versions=( "$@" )
 
-# Loop over sets of rules (sets of rules are separated with ||)
-for ver in "${versions[@]}"; do
-    rules_tail="$rules_string";
+    # Loop over sets of rules (sets of rules are separated with ||)
+    for ver in "${versions[@]}"; do
+        rules_tail="$rules_string";
 
-    while [ -n "$rules_tail" ]; do
-        head="${rules_tail%%||*}"
+        while [ -n "$rules_tail" ]; do
+            head="${rules_tail%%||*}"
 
-        if [ "$head" = "$rules_tail" ]; then
-            rules_string=""
-        else
-            rules_tail="${rules_tail#*||}"
-        fi
-
-        #if [ -z "$head" ] || [ -n "$(echo "$head" | grep -E -x '[ \t]*')" ]; then
-            #group=$(( $group + 1 ))
-            #continue
-        #fi
-
-        rules="$(resolve_rules "$head")"
-
-        # If specified rule cannot be recognised - end with error
-        if [ $? -eq 1 ]; then
-            exit 1
-        fi
-
-        if ! echo "$ver" | grep -q -E -x "[v=]?[ \t]*$RE_VER"; then
-            continue
-        fi
-
-        ver=$(echo "$ver" | grep -E -x "$RE_VER")
-
-        success=true
-        allow_prerel=false
-        if $FORCE_ALLOW_PREREL; then
-          allow_prerel=true
-        fi
-
-        while read -r rule; do
-            comparator="${rule%% *}"
-            operand="${rule#* }"
-
-            if [ -n "$(get_prerelease "$operand")" ] && semver_eq "$(get_number "$operand")" "$(get_number "$ver")" || [ "$rule" = "all" ]; then
-                allow_prerel=true
+            if [ "$head" = "$rules_tail" ]; then
+                rules_string=""
+            else
+                rules_tail="${rules_tail#*||}"
             fi
 
-            "rule_$comparator" "$operand" "$ver"
+            #if [ -z "$head" ] || [ -n "$(echo "$head" | grep -E -x '[ \t]*')" ]; then
+                #group=$(( $group + 1 ))
+                #continue
+            #fi
+
+            rules="$(resolve_rules "$head")"
+
+            # If specified rule cannot be recognised - end with error
             if [ $? -eq 1 ]; then
-                success=false
-                break
+                exit 1
             fi
-        done <<< "$rules"
 
-        if $success; then
-            if [ -z "$(get_prerelease "$ver")" ] || $allow_prerel; then
-                echo "$ver"
-                break;
+            if ! echo "$ver" | grep -q -E -x "[v=]?[ \t]*$RE_VER"; then
+                continue
             fi
-        fi
+
+            ver=$(echo "$ver" | grep -E -x "$RE_VER")
+
+            success=true
+            allow_prerel=false
+            if $FORCE_ALLOW_PREREL; then
+              allow_prerel=true
+            fi
+
+            while read -r rule; do
+                comparator="${rule%% *}"
+                operand="${rule#* }"
+
+                if [ -n "$(get_prerelease "$operand")" ] && semver_eq "$(get_number "$operand")" "$(get_number "$ver")" || [ "$rule" = "all" ]; then
+                    allow_prerel=true
+                fi
+
+                "rule_$comparator" "$operand" "$ver"
+                if [ $? -eq 1 ]; then
+                    success=false
+                    break
+                fi
+            done <<< "$rules"
+
+            if $success; then
+                if [ -z "$(get_prerelease "$ver")" ] || $allow_prerel; then
+                    echo "$ver"
+                    break;
+                fi
+            fi
+        done
+
+        group=$(( group + 1 ))
     done
-
-    group=$(( group + 1 ))
-done
 }
 
 
