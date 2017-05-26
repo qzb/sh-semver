@@ -507,4 +507,8 @@ VERSIONS=( ${@:-$(cat -)} )
 # Sort versions
 VERSIONS=( $(semver_sort "${VERSIONS[@]}") )
 
-apply_rules "$RULES_STRING" "${VERSIONS[@]}"
+if [ -z "$RULES_STRING" ]; then
+  printf '%s\n' "${VERSIONS[@]}"
+else
+  apply_rules "$RULES_STRING" "${VERSIONS[@]}"
+fi
