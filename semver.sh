@@ -37,8 +37,8 @@ get_number()
 # Gets prerelase part from normalized version
 get_prerelease()
 {
-    pre_and_meta=${1%+*}
-    pre=${pre_and_meta#*-}
+    local pre_and_meta=${1%+*}
+    local pre=${pre_and_meta#*-}
     if [ "$pre" = "$1" ]; then
         echo
     else
@@ -55,9 +55,9 @@ get_major()
 # Gets minor number from normalized version
 get_minor()
 {
-    minor_major_bug=${1%%-*}
-    minor_major=${minor_major_bug%.*}
-    minor=${minor_major#*.}
+    local minor_major_bug=${1%%-*}
+    local minor_major=${minor_major_bug%.*}
+    local minor=${minor_major#*.}
 
     if [ "$minor" = "$minor_major" ]; then
         echo
@@ -68,8 +68,8 @@ get_minor()
 
 get_bugfix()
 {
-    minor_major_bug=${1%%-*}
-    bugfix=${minor_major_bug##*.*.}
+    local minor_major_bug=${1%%-*}
+    local bugfix=${minor_major_bug##*.*.}
 
     if [ "$bugfix" = "$minor_major_bug" ]; then
         echo
@@ -422,11 +422,11 @@ if [ $# -eq 0 ]; then
     echo "Usage:    $0 -r <rule> <version> [<version>... ]"
 fi
 
-force_allow_prerel=false
+FORCE_ALLOW_PREREL=false
 while getopts ar:h o; do
     case "$o" in
-        a) force_allow_prerel=true ;;
-        r) rules_string="$OPTARG||";;
+        a) FORCE_ALLOW_PREREL=true ;;
+        r) RULES_STRING="$OPTARG||";;
         h|?) echo "Usage:    $0 -r <rule> <version> [<version>... ]"
     esac
 done
@@ -434,12 +434,16 @@ done
 shift $(( OPTIND-1 ))
 
 # Sort versions
-versions="$(semver_sort "$@")"
+VERSIONS=( $(semver_sort "$@") )
 
-output=""
+apply_rules()
+{
+  local rules_string="$1"
+  shift
+  local versions=( "$@" )
 
 # Loop over sets of rules (sets of rules are separated with ||)
-for ver in $versions; do
+for ver in "${versions[@]}"; do
     rules_tail="$rules_string";
 
     while [ -n "$rules_tail" ]; do
@@ -471,7 +475,7 @@ for ver in $versions; do
 
         success=true
         allow_prerel=false
-        if $force_allow_prerel; then
+        if $FORCE_ALLOW_PREREL; then
           allow_prerel=true
         fi
 
@@ -488,14 +492,11 @@ for ver in $versions; do
                 success=false
                 break
             fi
-        done \
-<<EOF
-$rules
-EOF
+        done <<< "$rules"
 
         if $success; then
             if [ -z "$(get_prerelease "$ver")" ] || $allow_prerel; then
-                output="$output$ver\n"
+                echo "$ver"
                 break;
             fi
         fi
@@ -503,7 +504,6 @@ EOF
 
     group=$(( group + 1 ))
 done
+}
 
-if [ -n "$output" ]; then
-    printf '%b' "$output"
-fi
+apply_rules "$RULES_STRING" "${VERSIONS[@]}"
