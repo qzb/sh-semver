@@ -489,16 +489,14 @@ apply_rules()
 
 
 
-if [ $# -eq 0 ]; then
-    echo "Usage:    $0 -r <rule> <version> [<version>... ]"
-fi
-
 FORCE_ALLOW_PREREL=false
+USAGE="Usage:    $0 -r <rule> <version> [<version>... ]"
 while getopts ar:h o; do
     case "$o" in
         a) FORCE_ALLOW_PREREL=true ;;
         r) RULES_STRING="$OPTARG||";;
-        h|?) echo "Usage:    $0 -r <rule> <version> [<version>... ]"
+        h) echo "$USAGE" && exit ;;
+        ?) echo "$USAGE" && exit 1;;
     esac
 done
 
