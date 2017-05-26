@@ -502,7 +502,9 @@ done
 
 shift $(( OPTIND-1 ))
 
+VERSIONS=( ${@:-$(cat -)} )
+
 # Sort versions
-VERSIONS=( $(semver_sort "$@") )
+VERSIONS=( $(semver_sort "${VERSIONS[@]}") )
 
 apply_rules "$RULES_STRING" "${VERSIONS[@]}"

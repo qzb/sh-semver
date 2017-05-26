@@ -54,7 +54,7 @@ summary()
 
 
 # Import semver
-. ./semver.sh
+. ./semver.sh < <(echo) # need to provide some stdin since no args are provided
 
 
 # Import specs
