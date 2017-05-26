@@ -417,25 +417,6 @@ rule_all()
     return 0
 }
 
-
-if [ $# -eq 0 ]; then
-    echo "Usage:    $0 -r <rule> <version> [<version>... ]"
-fi
-
-FORCE_ALLOW_PREREL=false
-while getopts ar:h o; do
-    case "$o" in
-        a) FORCE_ALLOW_PREREL=true ;;
-        r) RULES_STRING="$OPTARG||";;
-        h|?) echo "Usage:    $0 -r <rule> <version> [<version>... ]"
-    esac
-done
-
-shift $(( OPTIND-1 ))
-
-# Sort versions
-VERSIONS=( $(semver_sort "$@") )
-
 apply_rules()
 {
   local rules_string="$1"
@@ -505,5 +486,25 @@ for ver in "${versions[@]}"; do
     group=$(( group + 1 ))
 done
 }
+
+
+
+if [ $# -eq 0 ]; then
+    echo "Usage:    $0 -r <rule> <version> [<version>... ]"
+fi
+
+FORCE_ALLOW_PREREL=false
+while getopts ar:h o; do
+    case "$o" in
+        a) FORCE_ALLOW_PREREL=true ;;
+        r) RULES_STRING="$OPTARG||";;
+        h|?) echo "Usage:    $0 -r <rule> <version> [<version>... ]"
+    esac
+done
+
+shift $(( OPTIND-1 ))
+
+# Sort versions
+VERSIONS=( $(semver_sort "$@") )
 
 apply_rules "$RULES_STRING" "${VERSIONS[@]}"
