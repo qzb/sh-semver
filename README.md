@@ -5,6 +5,18 @@
 
 The semantic versioner for Bourne Shell.
 
+## CLI
+
+```
+semver.sh [-r <rule>] [<version>... ]
+```
+
+Given a rule and one or many versions, it will return all of the provided versions that satisfy the rule, in sorted order, one per line.
+
+If versions are omitted from the command line, it will read them from STDIN.
+
+If the rule is omitted from the command line, it will simply sort all the provided versions.
+
 ## Ranges
 
 Every *version range* contains one or more *sets of comparators*. To satisfy *version range* version must satisfies all *comparators* from at least one set. Sets are separated with two vertical bars ``||``. Rules in each set are separated with whitespaces. Empty set are treated as wildcard comparator ``*``.
