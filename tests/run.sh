@@ -58,6 +58,7 @@ summary()
 
 
 # Import specs
+. ./tests/input.sh
 . ./tests/tests.sh
 . ./tests/strict_rules_tests.sh
 . ./tests/output.sh
