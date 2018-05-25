@@ -57,5 +57,5 @@ Prerelease versions can satisfy comparators set only when have the same minor ma
 
 [npm-image]: https://img.shields.io/npm/v/sh-semver.svg
 [npm-url]: https://npmjs.org/package/sh-semver.sh
-[travis-image]: https://img.shields.io/travis/qzb/sh-semver/master.svg
+[travis-image]: https://travis-ci.org/qzb/sh-semver.svg?branch=master
 [travis-url]: https://travis-ci.org/qzb/sh-semver
