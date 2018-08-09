@@ -54,10 +54,11 @@ summary()
 
 
 # Import semver
-. ./semver.sh
+. ./semver.sh < <(echo) # need to provide some stdin since no args are provided
 
 
 # Import specs
+. ./tests/input.sh
 . ./tests/tests.sh
 . ./tests/strict_rules_tests.sh
 . ./tests/output.sh
