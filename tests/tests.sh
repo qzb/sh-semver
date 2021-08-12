@@ -122,6 +122,18 @@ describe 'semver_sort'
     RET=$(semver_sort 1 2 8 5 2 4 9 5 2 6 4 1 2 0 4 2 5 8 7 4 3)
     assert "$RET" "0 1 1 2 2 2 2 2 3 4 4 4 4 5 5 5 6 7 8 8 9" "should sort input - long input"
 
+    RET=$(semver_sort v1.2.3)
+    assert "$RET" "1.2.3" "should sort input - v1.2.3"
+
+    RET=$(semver_sort v1.2.3 v4.5.6 v7.8.9)
+    assert "$RET" "1.2.3 4.5.6 7.8.9" "should sort input - v1.2.3 v4.5.6 v7.8.9"
+
+    RET=$(semver_sort v7.8.9 v4.5.6 v1.2.3)
+    assert "$RET" "1.2.3 4.5.6 7.8.9" "should sort input - v1.2.3 v4.5.6 v7.8.9"
+
+    RET=$(semver_sort 1 2 8 v5 2 4 9 5 v2 6 4 v1 2 0 4 v2 5 8 7 4 3)
+    assert "$RET" "0 1 1 2 2 2 2 2 3 4 4 4 4 5 5 5 6 7 8 8 9" "should sort input - long input with some 'v' prefix"
+
 describe 'regex_match'
     regex_match "1.22.333 - 1.2.3-3.2.1-a.b.c-def+011.a.1" "$RE_VER - $RE_VER"
     assert $? 0                                             "Exit code should be 0 when match"

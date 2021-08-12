@@ -212,17 +212,18 @@ semver_ge()
 semver_sort()
 {
     if [ $# -le 1 ]; then
-        echo "$1"
+        echo "${1/v/}"
         return
     fi
 
-    local pivot=$1
+    local pivot=${1/v/}
     local args_a=()
     local args_b=()
 
     shift 1
 
     for ver in "$@"; do
+        ver=${ver/v/}
         if semver_le "$ver" "$pivot"; then
             args_a=( "${args_a[@]}" "$ver" )
         else
