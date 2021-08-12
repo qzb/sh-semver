@@ -222,9 +222,14 @@ semver_sort()
 
     shift 1
 
+    local comparator=semver_le
+    if $SEMVER_ORDER_DESC; then
+        comparator=semver_ge
+    fi
+
     for ver in "$@"; do
         ver=${ver/v/}
-        if semver_le "$ver" "$pivot"; then
+        if "$comparator" "$ver" "$pivot"; then
             args_a=( "${args_a[@]}" "$ver" )
         else
             args_b=( "$ver" "${args_b[@]}" )
@@ -490,15 +495,17 @@ apply_rules()
 
 
 
+SEMVER_ORDER_DESC=false
 FORCE_ALLOW_PREREL=false
 USAGE="Usage:    $0 [-r <rule>] [<version>... ]
 
 Omitting <version>s reads them from STDIN.
 Omitting -r <rule> simply sorts the versions according to semver ordering."
 
-while getopts ar:h o; do
+while getopts adr:h o; do
     case "$o" in
         a) FORCE_ALLOW_PREREL=true ;;
+        d) SEMVER_ORDER_DESC=true ;;
         r) RULES_STRING="$OPTARG||";;
         h) echo "$USAGE" && exit ;;
         ?) echo "$USAGE" && exit 1;;
